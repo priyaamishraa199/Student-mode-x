@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Mode</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef3fb;--card:#fff;--tx:#0b1b3a;--mut:#63728f;--ac:#1d4ed8;--ac2:#3b82f6;--soft:#e6eefc;--bd:#dfe7f4;--ok:#0f9d6b;--warn:#e08a00;--hero1:#1e40af;--hero2:#3b82f6;--sh:0 8px 24px rgba(29,78,216,.10)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1220;--card:#121c31;--tx:#e8eefc;--mut:#8fa0c2;--ac:#5b8cff;--ac2:#3b82f6;--soft:#1a2745;--bd:#22304d;--ok:#34d399;--warn:#fbbf24;--hero1:#1e3a8a;--hero2:#2563eb;--sh:0 8px 24px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0a1220;--card:#121c31;--tx:#e8eefc;--mut:#8fa0c2;--ac:#5b8cff;--ac2:#3b82f6;--soft:#1a2745;--bd:#22304d;--ok:#34d399;--warn:#fbbf24;--hero1:#1e3a8a;--hero2:#2563eb;--sh:0 8px 24px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Manrope,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45}
+#app{max-width:480px;margin:0 auto;padding:0 16px 96px}
+button,input,textarea,select{font:inherit;color:var(--tx)}button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:14px 0 10px}
+.top{display:flex;align-items:center;gap:10px}
+.logo{font-weight:800;font-size:1.05rem;letter-spacing:-.02em}.logo i{font-style:normal;background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;border-radius:8px;padding:2px 7px;margin-right:6px}
+.mode{font-size:1.15rem;font-weight:800;color:var(--ac);background:var(--soft);padding:8px 16px;border-radius:99px;letter-spacing:-.01em}
+.av{margin-left:auto;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#93c5fd,#2563eb);display:grid;place-items:center;font-size:1.2rem}
+.search{margin-top:6px;margin-bottom:6px;display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 12px}
+.search input{border:0;background:none;flex:1;outline:0}
+h2{font-size:1.15rem;margin:22px 0 10px;letter-spacing:-.01em}h2 small{font-weight:600;color:var(--mut);font-size:.8rem;margin-left:6px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px;box-shadow:var(--sh)}
+.hero{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;border-radius:22px;padding:18px;margin-top:8px}
+.hero h1{margin:0;font-size:1.5rem;letter-spacing:-.02em}.hero p{margin:4px 0 14px;opacity:.85;font-size:.9rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats div{background:rgba(255,255,255,.15);border-radius:14px;padding:10px}.stats b{font-size:1.2rem;display:block}.stats span{font-size:.72rem;opacity:.85}
+.bars{display:flex;align-items:end;gap:8px;height:90px;margin-top:8px}.bars div{flex:1;text-align:center;font-size:.7rem;color:var(--mut)}.bars i{display:block;border-radius:8px 8px 4px 4px;background:linear-gradient(var(--ac2),var(--ac));margin-bottom:4px}
+.live{display:flex;gap:12px;align-items:center}.dot{width:10px;height:10px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.2)}
+.btn{background:var(--ac);color:#fff;font-weight:700;border-radius:12px;padding:10px 16px}.btn.o{background:var(--soft);color:var(--ac)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}.chip{white-space:nowrap;border:1px solid var(--bd);background:var(--card);border-radius:99px;padding:6px 14px;font-size:.85rem;font-weight:600;color:var(--mut)}.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.lec{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.th{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;font-size:1.6rem;flex:none;color:#fff}
+.lec .in{flex:1;min-width:0}.lec b{display:block;font-size:.95rem}.lec small{color:var(--mut);font-size:.78rem}
+.pb{height:6px;background:var(--soft);border-radius:9px;margin-top:8px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ok);border-radius:9px}
+.bm{font-size:1.25rem;color:var(--mut)}.bm.on{color:var(--warn)}
+.tabs{display:flex;background:var(--soft);border-radius:14px;padding:4px;margin:8px 0 6px}.tabs button{flex:1;padding:9px;border-radius:11px;font-weight:700;font-size:.88rem;color:var(--mut)}.tabs button.on{background:var(--card);color:var(--ac);box-shadow:var(--sh)}
+textarea.q,select.q,input.q{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:8px}textarea.q{min-height:80px;resize:vertical}
+.tag{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px}.t-ok{background:rgba(15,157,107,.14);color:var(--ok)}.t-w{background:rgba(224,138,0,.15);color:var(--warn)}
+.note{margin-bottom:10px}.note b{display:block}.note p{margin:4px 0 0;color:var(--mut);font-size:.88rem}
+iframe{width:100%;height:680px;border:1px solid var(--bd);border-radius:18px;background:var(--card)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;padding:0 12px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{max-width:456px;margin:0 auto;display:flex;background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:6px;box-shadow:0 10px 30px rgba(11,27,58,.18)}
+nav button{flex:1;display:grid;justify-items:center;gap:2px;padding:8px 0;border-radius:16px;font-size:.7rem;font-weight:700;color:var(--mut)}nav button span{font-size:1.25rem}nav button.on{background:var(--soft);color:var(--ac)}
+.empty{text-align:center;color:var(--mut);padding:22px;border:2px dashed var(--bd);border-radius:18px;font-size:.9rem}
+.sec{display:none}.sec.on{display:block}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:12px;font-size:.85rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}#toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.mut{color:var(--mut)}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.row h2{margin:22px 0 10px}
+body.out #app,body.out nav{display:none}body:not(.out) #login{display:none}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}.lbox{width:100%;max-width:400px;padding:24px}.lbox h1{font-size:1.4rem;margin:18px 0 4px;letter-spacing:-.02em}.lbox p{margin:0 0 16px;font-size:.9rem}
+.wide{width:100%}.or{text-align:center;color:var(--mut);font-size:.8rem;margin:12px 0}
+.side{display:flex;flex-direction:column;align-items:center;gap:6px}.x{color:var(--mut);font-size:.9rem;padding:2px 6px}.x:hover{color:#ef4444}
+.lec a{color:var(--tx);text-decoration:underline;text-decoration-color:var(--ac2);text-underline-offset:3px}
+.pl{display:block;font-size:.72rem;color:var(--mut);margin-top:6px}.pl input{width:100%;accent-color:var(--ac)}
+button.tag{border:0}.lec .pb{margin-top:8px}.dls{display:flex;flex-wrap:wrap;gap:8px}.dls .btn{padding:8px 12px;font-size:.85rem}
+
+.welcome{position:relative;min-height:calc(100vh - 230px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;border-radius:28px;margin-top:10px;background:linear-gradient(145deg,var(--hero1),var(--hero2));color:#fff;padding:32px 20px;box-shadow:0 18px 40px rgba(29,78,216,.30)}
+.welcome h1{position:relative;margin:14px 0 0;font-size:2.4rem;font-weight:800;letter-spacing:-.03em;line-height:1.15;text-shadow:0 4px 18px rgba(0,0,0,.25)}
+.welcome .cap{position:relative;font-size:4.2rem;width:110px;height:110px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(6px);box-shadow:0 0 0 14px rgba(255,255,255,.08),0 0 0 30px rgba(255,255,255,.04);animation:fl 3.5s ease-in-out infinite}
+.welcome .bar{position:relative;width:70px;height:5px;border-radius:9px;background:rgba(255,255,255,.75);margin-top:18px}
+.orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55}.o1{width:220px;height:220px;background:#60a5fa;top:-70px;left:-60px}.o2{width:200px;height:200px;background:#a78bfa;bottom:-70px;right:-50px}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media (prefers-reduced-motion:reduce){.welcome .cap{animation:none}}
+</style></head><body class="out">
+<div id="login"><div class="lbox card">
+  <h1>Sign in to your lectures</h1>
+ <p class="mut">Add your own lectures, notes and doubts. Everything is saved on this device.</p>
+ <input class="q" id="lname" placeholder="Your name" autocomplete="name">
+ <input class="q" id="lmail" type="email" placeholder="Email" autocomplete="email">
+ <button class="btn wide" id="lin">Sign in</button>
+ <div class="or">or</div>
+ <button class="btn o wide" id="lguest">Continue as guest</button>
+</div></div>
+
+<div id="app">
+<header>
+ <div class="top"><span class="mode">Student mode</span><button class="chip" id="so" style="margin-left:auto">Sign out</button><div class="av" id="av" aria-hidden="true">🐧</div></div>
+</header>
+
+<section class="sec on" id="home">
+ <div class="welcome">
+  <div class="orb o1"></div><div class="orb o2"></div>
+  <div class="cap" aria-hidden="true">🎓</div>
+  <h1 id="hi">Welcome</h1>
+  <div class="bar"></div>
+ </div>
+</section>
+
+
+
+<section class="sec" id="doubts">
+ <h2>Doubt solving</h2>
+ <div class="tabs" id="dtabs"><button class="on" data-d="ask">My doubts</button><button data-d="tr">Language translator</button></div>
+ <div id="d-ask">
+  <div class="card"><b>Add a doubt</b>
+   <input class="q" id="dsub" placeholder="Subject" style="margin-top:10px">
+   <textarea class="q" id="dtxt" placeholder="Type your doubt"></textarea>
+   <button class="btn" id="dsend">Save doubt</button></div>
+  <h2>Your doubts</h2><div id="dlist"></div>
+ </div>
+ <div id="d-tr" hidden>
+  <p class="mut" style="font-size:.88rem;margin:6px 0 10px">Understand words in English, Hindi, Santali, Gondi or Bhili, with voice.</p>
+  <iframe title="Tribal language translator" loading="lazy" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, viewport-fit=cover&quot;&gt;
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;&lt;title&gt;Tribal Language Translator&lt;/title&gt;
+&lt;style&gt;
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#eef3fb;--card:#fff;--tx:#0b1b3a;--mut:#63728f;--ac:#1d4ed8;--bd:#dfe7f4}
+@media (prefers-color-scheme:dark){:root:not([data-theme=&quot;light&quot;]){--bg:#0a1220;--card:#121c31;--tx:#e8eefc;--mut:#8fa0c2;--ac:#3b6cf0;--bd:#22304d}}
+:root[data-theme=&quot;dark&quot;]{--bg:#0a1220;--card:#121c31;--tx:#e8eefc;--mut:#8fa0c2;--ac:#3b6cf0;--bd:#22304d}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Manrope,system-ui,-apple-system,&quot;Segoe UI&quot;,Roboto,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:8px 0 2px}p.sub{color:var(--mut);margin:0 0 16px;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:14px}
+label{font-size:.8rem;color:var(--mut);display:block;margin-bottom:4px}
+select,input,textarea,button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px 11px}
+select{width:100%}textarea{width:100%;min-height:90px;resize:vertical}
+button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.row&gt;div{flex:1;min-width:120px}
+.ft{display:flex;gap:8px;align-items:end}.ft&gt;div{flex:1}
+.out{border-top:1px solid var(--bd);padding:10px 0;display:flex;gap:10px;justify-content:space-between;align-items:center}
+.out:first-child{border-top:0}.out b{font-size:.75rem;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.out .t{font-size:1.15rem;word-break:break-word}
+.note{font-size:.8rem;color:var(--mut);margin-top:8px}.warn{color:var(--ac)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chips button{padding:5px 10px;font-size:.85rem}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.85rem}td,th{border-bottom:1px solid var(--bd);padding:6px;text-align:left;white-space:nowrap}
+details summary{cursor:pointer;font-weight:600}
+.card{border-radius:18px;box-shadow:0 8px 24px rgba(29,78,216,.10)}button.p{background:linear-gradient(135deg,#1e40af,#3b82f6);border-color:transparent}h1{letter-spacing:-.02em}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;
+&lt;div style=&quot;display:inline-block;background:var(--ac);color:#fff;font-weight:700;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:999px&quot;&gt;Student Mode&lt;/div&gt;
+&lt;h1&gt;Tribal Language Translator&lt;/h1&gt;
+&lt;p class=&quot;sub&quot;&gt;English / Hindi &amp;harr; Santali, Gondi, Bhili, with voice&lt;/p&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+ &lt;div class=&quot;ft&quot;&gt;
+  &lt;div&gt;&lt;label for=&quot;from&quot;&gt;From&lt;/label&gt;
+   &lt;select id=&quot;from&quot;&gt;
+    &lt;optgroup label=&quot;English / Hindi&quot;&gt;&lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;&lt;option value=&quot;hi&quot;&gt;Hindi&lt;/option&gt;&lt;/optgroup&gt;
+    &lt;optgroup label=&quot;Tribal languages&quot;&gt;&lt;option value=&quot;san&quot;&gt;Santali&lt;/option&gt;&lt;option value=&quot;gon&quot;&gt;Gondi&lt;/option&gt;&lt;option value=&quot;bhi&quot;&gt;Bhili&lt;/option&gt;&lt;/optgroup&gt;
+   &lt;/select&gt;&lt;/div&gt;
+  &lt;button id=&quot;swap&quot; title=&quot;Swap languages&quot; aria-label=&quot;Swap languages&quot;&gt;&amp;#8644;&lt;/button&gt;
+  &lt;div&gt;&lt;label for=&quot;to&quot;&gt;To&lt;/label&gt;&lt;select id=&quot;to&quot;&gt;&lt;/select&gt;&lt;/div&gt;
+ &lt;/div&gt;
+ &lt;div class=&quot;row&quot; style=&quot;margin-top:10px&quot;&gt;&lt;div&gt;&lt;label for=&quot;rate&quot;&gt;Voice speed&lt;/label&gt;&lt;input id=&quot;rate&quot; type=&quot;range&quot; min=&quot;0.5&quot; max=&quot;1.2&quot; step=&quot;0.1&quot; value=&quot;0.85&quot; style=&quot;width:100%&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+ &lt;label for=&quot;inp&quot; style=&quot;margin-top:10px&quot;&gt;Type here&lt;/label&gt;
+ &lt;textarea id=&quot;inp&quot; placeholder=&quot;Type a word or sentence&quot;&gt;&lt;/textarea&gt;
+ &lt;div class=&quot;row&quot; style=&quot;margin-top:8px&quot;&gt;
+  &lt;button class=&quot;p&quot; id=&quot;go&quot;&gt;Translate&lt;/button&gt;&lt;button id=&quot;mic&quot;&gt;🎤 Speak input&lt;/button&gt;&lt;button id=&quot;clr&quot;&gt;Clear&lt;/button&gt;
+ &lt;/div&gt;
+ &lt;div class=&quot;chips&quot; id=&quot;chips&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;card&quot; id=&quot;res&quot; hidden&gt;&lt;div id=&quot;outs&quot;&gt;&lt;/div&gt;&lt;div class=&quot;note&quot; id=&quot;miss&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+ &lt;details&gt;&lt;summary&gt;Add words &amp;amp; sentences&lt;/summary&gt;
+  &lt;p class=&quot;note&quot;&gt;Add as many as you like. Saved on this device.&lt;/p&gt;
+  &lt;div class=&quot;row&quot;&gt;
+   &lt;div&gt;&lt;label for=&quot;nl&quot;&gt;Tribal language&lt;/label&gt;&lt;select id=&quot;nl&quot;&gt;&lt;option value=&quot;san&quot;&gt;Santali&lt;/option&gt;&lt;option value=&quot;gon&quot;&gt;Gondi&lt;/option&gt;&lt;option value=&quot;bhi&quot;&gt;Bhili&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;
+   &lt;div&gt;&lt;label&gt;Tribal word (Roman)&lt;/label&gt;&lt;input id=&quot;n1&quot; style=&quot;width:100%&quot;&gt;&lt;/div&gt;
+   &lt;div&gt;&lt;label&gt;Tribal word (Devanagari, for voice)&lt;/label&gt;&lt;input id=&quot;n2&quot; style=&quot;width:100%&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;row&quot; style=&quot;margin-top:8px&quot;&gt;
+   &lt;div&gt;&lt;label&gt;English&lt;/label&gt;&lt;input id=&quot;n3&quot; style=&quot;width:100%&quot;&gt;&lt;/div&gt;
+   &lt;div&gt;&lt;label&gt;Hindi&lt;/label&gt;&lt;input id=&quot;n4&quot; style=&quot;width:100%&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;row&quot; style=&quot;margin-top:8px&quot;&gt;&lt;button class=&quot;p&quot; id=&quot;add&quot;&gt;Add entry&lt;/button&gt;&lt;button id=&quot;exp&quot;&gt;Export JSON&lt;/button&gt;&lt;button id=&quot;imp&quot;&gt;Import JSON&lt;/button&gt;&lt;/div&gt;
+  &lt;textarea id=&quot;io&quot; placeholder=&quot;Export/Import JSON appears here&quot; style=&quot;margin-top:8px;min-height:60px&quot;&gt;&lt;/textarea&gt;
+  &lt;div class=&quot;scroll&quot; style=&quot;margin-top:8px&quot;&gt;&lt;table id=&quot;tbl&quot;&gt;&lt;/table&gt;&lt;/div&gt;
+ &lt;/details&gt;
+&lt;/div&gt;
+&lt;p class=&quot;note warn&quot;&gt;Important: the words below are only a starter set and must be checked by native speakers (Gondi and Bhili have many dialects and some of their words are marked unverified). Browsers have no Santali, Gondi or Bhili voice, so tribal words are read aloud with a Hindi voice using the Devanagari spelling. This is an approximation.&lt;/p&gt;
+&lt;p class=&quot;note&quot; id=&quot;vstat&quot;&gt;&lt;/p&gt;
+&lt;/main&gt;
+&lt;script&gt;
+const mk=a=&gt;a.map(x=&gt;({t:x[0],dev:x[1],en:x[2],hi:x[3],u:x[4]}));
+const BASE={
+san:mk([
+[&quot;Johar&quot;,&quot;जोहार&quot;,&quot;Hello / Greetings&quot;,&quot;नमस्कार / जोहार&quot;],[&quot;Boge&quot;,&quot;बोगे&quot;,&quot;Good&quot;,&quot;अच्छा&quot;],
+[&quot;Iñ boge menaḱ&#x27;a&quot;,&quot;इञ बोगे मेनाक्आ&quot;,&quot;I am fine&quot;,&quot;मैं ठीक हूँ&quot;],[&quot;Iñ daka jom kana&quot;,&quot;इञ डाका जोम काना&quot;,&quot;I am eating rice&quot;,&quot;मैं चावल खा रहा हूँ&quot;],
+[&quot;Iñ&quot;,&quot;इञ&quot;,&quot;I&quot;,&quot;मैं&quot;],[&quot;Am&quot;,&quot;आम&quot;,&quot;You&quot;,&quot;तुम&quot;],[&quot;Dak&quot;,&quot;डाक&quot;,&quot;Water&quot;,&quot;पानी&quot;],[&quot;Daka&quot;,&quot;डाका&quot;,&quot;Rice&quot;,&quot;चावल&quot;],
+[&quot;Jom&quot;,&quot;जोम&quot;,&quot;Eat&quot;,&quot;खाओ&quot;],[&quot;Orak&quot;,&quot;ओड़ाक&quot;,&quot;House&quot;,&quot;घर&quot;],[&quot;Baba&quot;,&quot;बाबा&quot;,&quot;Father&quot;,&quot;पिता&quot;],[&quot;Ayo&quot;,&quot;आयो&quot;,&quot;Mother&quot;,&quot;माँ&quot;],
+[&quot;Kora&quot;,&quot;कोड़ा&quot;,&quot;Boy&quot;,&quot;लड़का&quot;],[&quot;Kuri&quot;,&quot;कुड़ी&quot;,&quot;Girl&quot;,&quot;लड़की&quot;],[&quot;Hor&quot;,&quot;होड़&quot;,&quot;Person&quot;,&quot;आदमी&quot;],[&quot;Sengel&quot;,&quot;सेंगेल&quot;,&quot;Sun / Fire&quot;,&quot;सूरज / आग&quot;],
+[&quot;Sirma&quot;,&quot;सिरमा&quot;,&quot;Sky&quot;,&quot;आकाश&quot;],[&quot;Baha&quot;,&quot;बाहा&quot;,&quot;Flower&quot;,&quot;फूल&quot;],[&quot;Mit&quot;,&quot;मिट&quot;,&quot;One&quot;,&quot;एक&quot;],[&quot;Barea&quot;,&quot;बारेया&quot;,&quot;Two&quot;,&quot;दो&quot;],
+[&quot;Pea&quot;,&quot;पेया&quot;,&quot;Three&quot;,&quot;तीन&quot;],[&quot;Ponea&quot;,&quot;पोनेया&quot;,&quot;Four&quot;,&quot;चार&quot;],[&quot;Mone&quot;,&quot;मोने&quot;,&quot;Five&quot;,&quot;पाँच&quot;],[&quot;Turui&quot;,&quot;तुरुई&quot;,&quot;Six&quot;,&quot;छह&quot;],
+[&quot;Eae&quot;,&quot;एआए&quot;,&quot;Seven&quot;,&quot;सात&quot;],[&quot;Iral&quot;,&quot;इराल&quot;,&quot;Eight&quot;,&quot;आठ&quot;],[&quot;Area&quot;,&quot;आरेया&quot;,&quot;Nine&quot;,&quot;नौ&quot;],[&quot;Gel&quot;,&quot;गेल&quot;,&quot;Ten&quot;,&quot;दस&quot;]]),
+gon:mk([
+[&quot;Jai Sewa&quot;,&quot;जय सेवा&quot;,&quot;Hello / Greetings&quot;,&quot;नमस्ते / जय सेवा&quot;],[&quot;Manda&quot;,&quot;मंडा&quot;,&quot;Good&quot;,&quot;अच्छा&quot;,1],
+[&quot;Nanna manda&quot;,&quot;नन्ना मंडा&quot;,&quot;I am fine&quot;,&quot;मैं ठीक हूँ&quot;,1],[&quot;Nanna kanji tinta&quot;,&quot;नन्ना कंजी तिंता&quot;,&quot;I am eating rice&quot;,&quot;मैं चावल खा रहा हूँ&quot;,1],
+[&quot;Nanna&quot;,&quot;नन्ना&quot;,&quot;I&quot;,&quot;मैं&quot;,1],[&quot;Imma&quot;,&quot;इम्मा&quot;,&quot;You&quot;,&quot;तुम&quot;,1],[&quot;Yer&quot;,&quot;येर&quot;,&quot;Water&quot;,&quot;पानी&quot;],[&quot;Kanji&quot;,&quot;कंजी&quot;,&quot;Rice&quot;,&quot;चावल&quot;,1],
+[&quot;Tin&quot;,&quot;तिन्&quot;,&quot;Eat&quot;,&quot;खाओ&quot;,1],[&quot;Illu&quot;,&quot;इल्लू&quot;,&quot;House&quot;,&quot;घर&quot;,1],[&quot;Baba&quot;,&quot;बाबा&quot;,&quot;Father&quot;,&quot;पिता&quot;],[&quot;Aaye&quot;,&quot;आये&quot;,&quot;Mother&quot;,&quot;माँ&quot;,1],
+[&quot;Pillaa&quot;,&quot;पिल्ला&quot;,&quot;Boy&quot;,&quot;लड़का&quot;,1],[&quot;Payyal&quot;,&quot;पय्याल&quot;,&quot;Girl&quot;,&quot;लड़की&quot;,1],[&quot;Manwa&quot;,&quot;मनवा&quot;,&quot;Person&quot;,&quot;आदमी&quot;,1],[&quot;Nenda&quot;,&quot;नेंदा&quot;,&quot;Sun / Fire&quot;,&quot;सूरज / आग&quot;,1],
+[&quot;Ambar&quot;,&quot;अम्बर&quot;,&quot;Sky&quot;,&quot;आकाश&quot;,1],[&quot;Puv&quot;,&quot;पूव&quot;,&quot;Flower&quot;,&quot;फूल&quot;,1],[&quot;Undi&quot;,&quot;उन्दी&quot;,&quot;One&quot;,&quot;एक&quot;],[&quot;Rand&quot;,&quot;रंड&quot;,&quot;Two&quot;,&quot;दो&quot;],
+[&quot;Mund&quot;,&quot;मूंद&quot;,&quot;Three&quot;,&quot;तीन&quot;],[&quot;Nalung&quot;,&quot;नालुंग&quot;,&quot;Four&quot;,&quot;चार&quot;],[&quot;Saiyung&quot;,&quot;सैयुंग&quot;,&quot;Five&quot;,&quot;पाँच&quot;],[&quot;Sarung&quot;,&quot;सारुंग&quot;,&quot;Six&quot;,&quot;छह&quot;],
+[&quot;Yenmad&quot;,&quot;येन्माड&quot;,&quot;Seven&quot;,&quot;सात&quot;],[&quot;Armur&quot;,&quot;अरमूर&quot;,&quot;Eight&quot;,&quot;आठ&quot;],[&quot;Unmuk&quot;,&quot;उनमुक&quot;,&quot;Nine&quot;,&quot;नौ&quot;],[&quot;Padd&quot;,&quot;पड्ड&quot;,&quot;Ten&quot;,&quot;दस&quot;]]),
+bhi:mk([
+[&quot;Ram Ram&quot;,&quot;राम राम&quot;,&quot;Hello / Greetings&quot;,&quot;नमस्ते / राम राम&quot;],[&quot;Saru&quot;,&quot;सारू&quot;,&quot;Good&quot;,&quot;अच्छा&quot;,1],
+[&quot;Mu saru chhu&quot;,&quot;मू सारू छू&quot;,&quot;I am fine&quot;,&quot;मैं ठीक हूँ&quot;,1],[&quot;Mu chokha khau chhu&quot;,&quot;मू चोखा खाऊ छू&quot;,&quot;I am eating rice&quot;,&quot;मैं चावल खा रहा हूँ&quot;,1],
+[&quot;Mu&quot;,&quot;मू&quot;,&quot;I&quot;,&quot;मैं&quot;,1],[&quot;Tu&quot;,&quot;तू&quot;,&quot;You&quot;,&quot;तुम&quot;,1],[&quot;Pani&quot;,&quot;पानी&quot;,&quot;Water&quot;,&quot;पानी&quot;],[&quot;Chokha&quot;,&quot;चोखा&quot;,&quot;Rice&quot;,&quot;चावल&quot;,1],
+[&quot;Kha&quot;,&quot;खा&quot;,&quot;Eat&quot;,&quot;खाओ&quot;],[&quot;Ghar&quot;,&quot;घर&quot;,&quot;House&quot;,&quot;घर&quot;],[&quot;Bapu&quot;,&quot;बापू&quot;,&quot;Father&quot;,&quot;पिता&quot;],[&quot;Aai&quot;,&quot;आई&quot;,&quot;Mother&quot;,&quot;माँ&quot;],
+[&quot;Chhoro&quot;,&quot;छोरो&quot;,&quot;Boy&quot;,&quot;लड़का&quot;],[&quot;Chhori&quot;,&quot;छोरी&quot;,&quot;Girl&quot;,&quot;लड़की&quot;],[&quot;Manakh&quot;,&quot;मानख&quot;,&quot;Person&quot;,&quot;आदमी&quot;,1],[&quot;Suraj&quot;,&quot;सूरज&quot;,&quot;Sun / Fire&quot;,&quot;सूरज / आग&quot;,1],
+[&quot;Aakas&quot;,&quot;आकास&quot;,&quot;Sky&quot;,&quot;आकाश&quot;],[&quot;Phool&quot;,&quot;फूल&quot;,&quot;Flower&quot;,&quot;फूल&quot;],[&quot;Ek&quot;,&quot;एक&quot;,&quot;One&quot;,&quot;एक&quot;],[&quot;Be&quot;,&quot;बे&quot;,&quot;Two&quot;,&quot;दो&quot;,1],
+[&quot;Tran&quot;,&quot;त्रण&quot;,&quot;Three&quot;,&quot;तीन&quot;,1],[&quot;Char&quot;,&quot;चार&quot;,&quot;Four&quot;,&quot;चार&quot;],[&quot;Panch&quot;,&quot;पाँच&quot;,&quot;Five&quot;,&quot;पाँच&quot;],[&quot;Chha&quot;,&quot;छ&quot;,&quot;Six&quot;,&quot;छह&quot;,1],
+[&quot;Sat&quot;,&quot;सात&quot;,&quot;Seven&quot;,&quot;सात&quot;],[&quot;Aath&quot;,&quot;आठ&quot;,&quot;Eight&quot;,&quot;आठ&quot;],[&quot;Nav&quot;,&quot;नव&quot;,&quot;Nine&quot;,&quot;नौ&quot;],[&quot;Das&quot;,&quot;दस&quot;,&quot;Ten&quot;,&quot;दस&quot;]])
+};
+const NAMES={en:&quot;English&quot;,hi:&quot;Hindi&quot;,san:&quot;Santali&quot;,gon:&quot;Gondi&quot;,bhi:&quot;Bhili&quot;},TRIBAL=[&quot;san&quot;,&quot;gon&quot;,&quot;bhi&quot;];
+let D=JSON.parse(JSON.stringify(BASE));
+try{const s=JSON.parse(localStorage.getItem(&quot;tt_d3&quot;)||&quot;null&quot;);if(s&amp;&amp;s.san)D=s}catch(e){}
+const save=()=&gt;{try{localStorage.setItem(&quot;tt_d3&quot;,JSON.stringify(D))}catch(e){}};
+const $=id=&gt;document.getElementById(id);
+const isT=l=&gt;TRIBAL.includes(l);
+const norm=s=&gt;s.toLowerCase().normalize(&quot;NFD&quot;).replace(/[\u0300-\u036f]/g,&quot;&quot;).replace(/[.,!?;:&quot;&#x27;’`ʼ।]/g,&quot;&quot;).replace(/\s+/g,&quot; &quot;).trim();
+const first=s=&gt;s.split(&quot;/&quot;)[0].trim();
+function fillTo(){
+ const f=$(&quot;from&quot;).value,to=$(&quot;to&quot;),prev=to.value;
+ const opts=isT(f)?[&quot;en&quot;,&quot;hi&quot;]:TRIBAL;
+ to.innerHTML=opts.map(o=&gt;&#x27;&lt;option value=&quot;&#x27;+o+&#x27;&quot;&gt;&#x27;+NAMES[o]+&#x27;&lt;/option&gt;&#x27;).join(&quot;&quot;);
+ if(opts.includes(prev))to.value=prev;
+}
+// dictionary = tribal language&#x27;s list; key on the source side
+function idx(dict,side){const m={};dict.forEach((e,i)=&gt;{(side===&quot;t&quot;?[e.t]:e[side].split(&quot;/&quot;)).forEach(x=&gt;{const k=norm(x);if(k&amp;&amp;!(k in m))m[k]=i})});return m}
+function tr(text,f,t){
+ const tl=isT(f)?f:t,dict=D[tl]||[],M=idx(dict,isT(f)?&quot;t&quot;:f),full=norm(text);
+ if(full in M)return{e:[dict[M[full]]],miss:[]};
+ const tk=full.split(&quot; &quot;),out=[],miss=[];let i=0;
+ while(i&lt;tk.length){let ok=false;
+  for(let n=Math.min(4,tk.length-i);n&gt;0;n--){const k=tk.slice(i,i+n).join(&quot; &quot;);if(k in M){out.push(dict[M[k]]);i+=n;ok=true;break}}
+  if(!ok){miss.push(tk[i]);out.push(null);i++}}
+ return{e:out,miss};
+}
+let voices=[];
+function loadV(){voices=speechSynthesis.getVoices();const h=voices.some(v=&gt;v.lang.startsWith(&quot;hi&quot;)),e=voices.some(v=&gt;v.lang.startsWith(&quot;en&quot;));
+ $(&quot;vstat&quot;).textContent=(h?&quot;Hindi voice found. &quot;:&quot;No Hindi voice on this device: install one in system settings for Hindi and tribal speech. &quot;)+(e?&quot;English voice found.&quot;:&quot;No English voice found.&quot;)}
+if(&quot;speechSynthesis&quot; in window){loadV();speechSynthesis.onvoiceschanged=loadV}
+function speak(txt,lang){
+ if(!(&quot;speechSynthesis&quot; in window)){alert(&quot;Voice is not supported in this browser.&quot;);return}
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt),c=lang===&quot;en&quot;?&quot;en&quot;:&quot;hi&quot;;
+ u.lang=c===&quot;en&quot;?&quot;en-IN&quot;:&quot;hi-IN&quot;;
+ const v=voices.find(v=&gt;v.lang.replace(&quot;_&quot;,&quot;-&quot;).toLowerCase()===u.lang.toLowerCase())||voices.find(v=&gt;v.lang.toLowerCase().startsWith(c));
+ if(v)u.voice=v;u.rate=+$(&quot;rate&quot;).value;speechSynthesis.speak(u);
+}
+function run(){
+ const txt=$(&quot;inp&quot;).value.trim();if(!txt)return;
+ const f=$(&quot;from&quot;).value,t=$(&quot;to&quot;).value,r=tr(txt,f,t);
+ const shown=r.e.map(e=&gt;e?(t===&quot;en&quot;||t===&quot;hi&quot;?first(e[t]):e.t):&quot;[?]&quot;).join(&quot; &quot;);
+ const spoken=isT(t)?r.e.map(e=&gt;e?e.dev:&quot;&quot;).join(&quot; &quot;):shown;
+ const box=$(&quot;outs&quot;);box.innerHTML=&quot;&quot;;
+ const d=document.createElement(&quot;div&quot;);d.className=&quot;out&quot;;
+ d.innerHTML=&#x27;&lt;div&gt;&lt;b&gt;&#x27;+NAMES[f]+&#x27; &amp;rarr; &#x27;+NAMES[t]+&#x27;&lt;/b&gt;&lt;div class=&quot;t&quot;&gt;&lt;/div&gt;&#x27;+(isT(t)?&#x27;&lt;div class=&quot;note&quot; id=&quot;dv&quot;&gt;&lt;/div&gt;&#x27;:&quot;&quot;)+&#x27;&lt;/div&gt;&#x27;;
+ d.querySelector(&quot;.t&quot;).textContent=shown;
+ if(isT(t))d.querySelector(&quot;#dv&quot;).textContent=spoken;
+ const b=document.createElement(&quot;button&quot;);b.textContent=&quot;🔊 Listen&quot;;b.onclick=()=&gt;speak(spoken,t);d.appendChild(b);box.appendChild(d);
+ $(&quot;miss&quot;).textContent=(r.miss.length?&quot;Not in dictionary yet: &quot;+r.miss.join(&quot;, &quot;)+&quot;. Add them under &#x27;Add words &amp; sentences&#x27;. &quot;:&quot;&quot;)+(r.e.some(e=&gt;e&amp;&amp;e.u)?&quot;Warning: some words here are unverified, please check with a native speaker.&quot;:&quot;&quot;);
+ $(&quot;res&quot;).hidden=false;
+}
+function chips(){const c=$(&quot;chips&quot;);c.innerHTML=&quot;&quot;;const f=$(&quot;from&quot;).value,tl=isT(f)?f:$(&quot;to&quot;).value;
+ (D[tl]||[]).slice(0,6).forEach(e=&gt;{const w=isT(f)?e.t:first(e[f]),b=document.createElement(&quot;button&quot;);b.textContent=w;b.onclick=()=&gt;{$(&quot;inp&quot;).value=w;run()};c.appendChild(b)})}
+function table(){const l=$(&quot;nl&quot;).value,t=$(&quot;tbl&quot;);t.innerHTML=&quot;&lt;tr&gt;&lt;th&gt;&quot;+NAMES[l]+&quot;&lt;/th&gt;&lt;th&gt;Devanagari&lt;/th&gt;&lt;th&gt;English&lt;/th&gt;&lt;th&gt;Hindi&lt;/th&gt;&lt;th&gt;&lt;/th&gt;&lt;/tr&gt;&quot;;
+ (D[l]||[]).forEach((e,i)=&gt;{const r=t.insertRow();[e.t,e.dev,e.en,e.hi].forEach(x=&gt;r.insertCell().textContent=x);
+  const b=document.createElement(&quot;button&quot;);b.textContent=&quot;✕&quot;;b.onclick=()=&gt;{D[l].splice(i,1);save();table();chips()};r.insertCell().appendChild(b)})}
+$(&quot;go&quot;).onclick=run;$(&quot;clr&quot;).onclick=()=&gt;{$(&quot;inp&quot;).value=&quot;&quot;;$(&quot;res&quot;).hidden=true};
+$(&quot;from&quot;).onchange=()=&gt;{fillTo();chips();if($(&quot;inp&quot;).value)run()};
+$(&quot;to&quot;).onchange=()=&gt;{chips();if($(&quot;inp&quot;).value)run()};
+$(&quot;swap&quot;).onclick=()=&gt;{const f=$(&quot;from&quot;).value,t=$(&quot;to&quot;).value;$(&quot;from&quot;).value=t;fillTo();$(&quot;to&quot;).value=f;chips();if($(&quot;inp&quot;).value)run()};
+$(&quot;nl&quot;).onchange=table;
+$(&quot;add&quot;).onclick=()=&gt;{const v=[&quot;n1&quot;,&quot;n2&quot;,&quot;n3&quot;,&quot;n4&quot;].map(i=&gt;$(i).value.trim());
+ if(v.some(x=&gt;!x)){alert(&quot;Please fill all four fields.&quot;);return}
+ D[$(&quot;nl&quot;).value].push({t:v[0],dev:v[1],en:v[2],hi:v[3]});save();table();chips();[&quot;n1&quot;,&quot;n2&quot;,&quot;n3&quot;,&quot;n4&quot;].forEach(i=&gt;$(i).value=&quot;&quot;)};
+$(&quot;exp&quot;).onclick=()=&gt;{$(&quot;io&quot;).value=JSON.stringify(D)};
+$(&quot;imp&quot;).onclick=()=&gt;{try{const a=JSON.parse($(&quot;io&quot;).value);TRIBAL.forEach(l=&gt;{(a[l]||[]).forEach(e=&gt;{if(e.t&amp;&amp;e.dev&amp;&amp;e.en&amp;&amp;e.hi)D[l].push(e)})});save();table();chips()}catch(e){alert(&quot;Invalid JSON.&quot;)}};
+$(&quot;mic&quot;).onclick=()=&gt;{const SR=window.SpeechRecognition||window.webkitSpeechRecognition,f=$(&quot;from&quot;).value;
+ if(!SR){alert(&quot;Voice input is not supported in this browser.&quot;);return}
+ if(isT(f)){alert(&quot;Voice input is not available for tribal languages. Choose English or Hindi in &#x27;From&#x27;.&quot;);return}
+ const r=new SR();r.lang=f===&quot;en&quot;?&quot;en-IN&quot;:&quot;hi-IN&quot;;r.onresult=e=&gt;{$(&quot;inp&quot;).value=e.results[0][0].transcript;run()};r.start()};
+fillTo();$(&quot;to&quot;).value=&quot;san&quot;;table();chips();
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+"></iframe>
+ </div>
+</section>
+
+<section class="sec" id="library">
+ <h2>Library</h2>
+ <div class="card" id="dlcard" hidden style="margin-bottom:12px"><b>Download</b><p class="mut" style="margin:4px 0 10px;font-size:.85rem">Save your data as a file.</p>
+  <div class="dls"><button class="btn o" id="dl1">Lectures (.csv)</button><button class="btn o" id="dl2">Notes (.md)</button><button class="btn o" id="dl3">Backup (.json)</button></div></div>
+ <div class="tabs" id="ltabs"><button class="on" data-l="saved">Lectures</button><button data-l="notes">Notes</button></div>
+ <div id="l-saved"><label class="search"><span>🔍</span><input id="sq" placeholder="Search your lectures" aria-label="Search"></label>
+ <div class="row"><h2 style="margin-top:8px">My lectures</h2><button class="btn" id="ltog">＋ Add lecture</button></div>
+ <div class="card" id="lform" hidden style="margin-bottom:12px">
+  <input class="q" id="lt" placeholder="Lecture title *">
+  <input class="q" id="ls" list="sl" placeholder="Subject or chapter *"><datalist id="sl"></datalist>
+  <input class="q" id="lb" placeholder="Teacher (optional)">
+  <input class="q" id="ld" placeholder="Duration, e.g. 45 min (optional)">
+  <input class="q" id="lu" placeholder="Video or notes link (optional)">
+  <button class="btn" id="ladd">Save lecture</button>
+ </div>
+ <div class="chips" id="subj"></div>
+ <div id="lecs" style="margin-top:10px"></div>
+</div>
+ <div id="l-notes" hidden>
+  <div class="card" style="margin-bottom:12px"><input class="q" id="ntitle" placeholder="Note title"><textarea class="q" id="nbody" placeholder="Write your note"></textarea><button class="btn" id="nadd">Save note</button></div>
+  <div id="nlist"></div>
+ </div>
+</section>
+</div>
+<div id="toast" role="status"></div>
+<nav><div id="nav"></div></nav>
+<script>
+const $=id=>document.getElementById(id);
+let S={user:null,lec:[],notes:[],db:[]};
+try{const r=JSON.parse(localStorage.getItem("hl_v2")||"null");if(r&&typeof r==="object")S=Object.assign(S,r)}catch(e){}
+const save=()=>{try{localStorage.setItem("hl_v2",JSON.stringify(S))}catch(e){}};
+let subj="All",q="";
+const PAL=["#2563eb","#0f9d6b","#7c3aed","#0ea5e9","#e08a00","#db2777"];
+const col=s=>PAL[[...s].reduce((a,c)=>a+c.charCodeAt(0),0)%6];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const fixUrl=u=>u?(/^https?:\/\//i.test(u)?u:"https://"+u):"";
+const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1600)};
+const match=l=>(subj==="All"||l.s===subj)&&(l.t+" "+l.s+" "+(l.by||"")).toLowerCase().includes(q);
+function lec(l,full){return `<div class="card lec"><div class="th" style="background:${col(l.s)}">${esc((l.s[0]||"L").toUpperCase())}</div><div class="in"><b>${l.u?`<a href="${esc(l.u)}" target="_blank" rel="noopener noreferrer">${esc(l.t)}</a>`:esc(l.t)}</b><small>${esc(l.s)}${l.by?" · "+esc(l.by):""}${l.d?" · "+esc(l.d):""}</small>${full?`<div class="pb"><i style="width:${l.p}%"></i></div><label class="pl">Watched ${l.p}%<input type="range" min="0" max="100" step="5" value="${l.p}" data-p="${l.id}"></label>`:""}</div><div class="side"><button class="bm ${l.sv?"on":""}" data-bm="${l.id}" aria-label="Save lecture">${l.sv?"★":"☆"}</button><button class="x" data-del="${l.id}" aria-label="Delete lecture">✕</button></div></div>`}
+const noteCard=n=>`<div class="card note"><div class="row"><b>${esc(n.t)}</b><button class="x" data-dn="${n.id}" aria-label="Delete note">✕</button></div><p>${esc(n.b)}</p></div>`;
+function render(){
+ const u=S.user;document.body.classList.toggle("out",!u);
+ if(u){$("hi").textContent=u.guest?"Welcome, guest":"Welcome back, "+u.name;$("av").textContent=u.guest?"🐧":u.name[0].toUpperCase()}
+ 
+ const subs=[...new Set(S.lec.map(l=>l.s))];if(!subs.includes(subj))subj="All";
+ $("subj").innerHTML=["All",...subs].map(s=>`<button class="chip ${s===subj?"on":""}" data-s="${esc(s)}">${esc(s)}</button>`).join("");
+ $("sl").innerHTML=subs.map(s=>`<option value="${esc(s)}">`).join("");
+ $("lecs").innerHTML=S.lec.filter(match).map(l=>lec(l,1)).join("")||`<div class="empty">${S.lec.length?"No lectures match your search.":"No lectures yet. Tap “Add lecture” to create your first one."}</div>`;
+ $("nlist").innerHTML=S.notes.map(noteCard).join("")||`<div class="empty">No notes yet. Write your first note above.</div>`;
+ $("dlist").innerHTML=S.db.map(d=>`<div class="card note"><div class="row"><b>${esc(d.q)}</b><button class="x" data-dd="${d.id}" aria-label="Delete doubt">✕</button></div><p>${esc(d.s||"General")} <button class="tag ${d.ok?"t-ok":"t-w"}" data-ds="${d.id}">${d.ok?"Solved":"Mark as solved"}</button></p></div>`).join("")||`<div class="empty">No doubts yet. Add one above and mark it solved later.</div>`;
+}
+const NAV=[["home","🏠","Home"],["doubts","💬","Doubts"],["library","📚","Library"]];
+$("nav").innerHTML=NAV.map(n=>`<button data-go="${n[0]}"><span>${n[1]}</span>${n[2]}</button>`).join("");
+function go(v){document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===v));document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v));scrollTo(0,0)}
+const by=(a,id)=>a.find(x=>x.id===id);
+document.addEventListener("click",e=>{
+ const t=e.target.closest("button");if(!t)return;const d=t.dataset;
+ if(d.go)go(d.go);
+ if(d.bm){const l=by(S.lec,d.bm);l.sv=l.sv?0:1;toast(l.sv?"Saved to Library":"Removed from Library")}
+ if(d.del)S.lec=S.lec.filter(l=>l.id!==d.del);
+ if(d.dn)S.notes=S.notes.filter(n=>n.id!==d.dn);
+ if(d.dd)S.db=S.db.filter(n=>n.id!==d.dd);
+ if(d.ds){const x=by(S.db,d.ds);x.ok=x.ok?0:1}
+ if(d.s)subj=d.s;
+ if(d.d){document.querySelectorAll("#dtabs button").forEach(b=>b.classList.toggle("on",b===t));$("d-ask").hidden=d.d!=="ask";$("d-tr").hidden=d.d!=="tr"}
+ if(d.l){document.querySelectorAll("#ltabs button").forEach(b=>b.classList.toggle("on",b===t));$("l-saved").hidden=d.l!=="saved";$("l-notes").hidden=d.l!=="notes"}
+ if(d.bm||d.del||d.dn||d.dd||d.ds||d.s){save();render()}
+});
+document.addEventListener("change",e=>{const p=e.target.dataset.p;if(p){by(S.lec,p).p=+e.target.value;save();render()}});
+$("sq").oninput=e=>{q=e.target.value.toLowerCase();render()};
+$("ltog").onclick=()=>{$("lform").hidden=!$("lform").hidden};
+$("ladd").onclick=()=>{const t=$("lt").value.trim(),s=$("ls").value.trim();if(!t||!s){toast("Add a title and subject");return}
+ S.lec.unshift({id:uid(),t,s,by:$("lb").value.trim(),d:$("ld").value.trim(),u:fixUrl($("lu").value.trim()),p:0,sv:0});
+ ["lt","ls","lb","ld","lu"].forEach(i=>$(i).value="");$("lform").hidden=true;save();render();toast("Lecture added")};
+$("dsend").onclick=()=>{const v=$("dtxt").value.trim();if(!v){toast("Type your doubt first");return}S.db.unshift({id:uid(),q:v,s:$("dsub").value.trim(),ok:0});$("dtxt").value="";save();render();toast("Doubt saved")};
+$("nadd").onclick=()=>{const t=$("ntitle").value.trim(),b=$("nbody").value.trim();if(!t||!b){toast("Add a title and a note");return}S.notes.unshift({id:uid(),t,b});$("ntitle").value=$("nbody").value="";save();render();toast("Note saved")};
+$("lin").onclick=()=>{const n=$("lname").value.trim(),m=$("lmail").value.trim();if(!n||!/.+@.+\..+/.test(m)){toast("Enter your name and a valid email");return}S.user={name:n,email:m,guest:0};save();go("home");render()};
+$("lguest").onclick=()=>{S.user={name:"Guest",guest:1};save();go("home");render()};
+$("so").onclick=()=>{S.user=null;save();render()};
+let DL=null;
+(async()=>{try{if(window.claude)DL=await claude.use("downloads")}catch(e){}if(DL)$("dlcard").hidden=false})();
+async function dl(name,data){if(!DL)return;try{await DL.save({filename:name,data});toast("Saved")}catch(e){if(!e||e.code!=="declined")toast("Download not available")}}
+const cell=c=>{c=String(c);if(/^[=+\-@]/.test(c))c="'"+c;return '"'+c.replace(/"/g,'""')+'"'};
+$("dl1").onclick=()=>S.lec.length?dl("my-lectures.csv",[["Title","Subject","Teacher","Duration","Link","Watched %","Saved"],...S.lec.map(l=>[l.t,l.s,l.by||"",l.d||"",l.u||"",l.p,l.sv?"yes":"no"])].map(r=>r.map(cell).join(",")).join("\n")):toast("Add a lecture first");
+$("dl2").onclick=()=>S.notes.length?dl("my-notes.md",S.notes.map(n=>"## "+n.t+"\n\n"+n.b).join("\n\n")):toast("Add a note first");
+$("dl3").onclick=()=>dl("backup.json",JSON.stringify({lectures:S.lec,notes:S.notes,doubts:S.db},null,2));
+go("home");render();
+</script></body></html>
